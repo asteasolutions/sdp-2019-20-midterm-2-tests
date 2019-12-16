@@ -1,54 +1,55 @@
+#define CHECK_VALID(s)      CHECK(valid(s,error));
+#define CHECK_ERROR(s,code) CHECK(!valid(s,error));CHECK_EQ(error,code);
+
 TEST_CASE("Positive tests") {
   unsigned error;
 
-  CHECK("(a->b->b)->b->a->b", error);
+  CHECK_VALID("(a->b->b)->b->a->b");
 
-  CHECK(valid("a", error));
-  CHECK(valid("a->b", error));
-  CHECK(valid("(a->b)", error));
-  CHECK(valid("(((((a->b)))))", error));
-  CHECK(valid("a->b->c", error));
-  CHECK(valid("(a->b->c)", error));
-  CHECK(valid("(a->b)->c", error));
-  CHECK(valid("((((a->b))))->c", error));
-  CHECK(valid("((a->b)->c)->d", error));
-  CHECK(valid("((((a->b))->c))->d", error));
-  CHECK(valid("(a->b)->c->d->(e->f)->g", error));
-  CHECK(valid("((a->(b->c)->d)->(e->f->g)->(h->i)->k->l->m", error));
+  CHECK_VALID("a");
+  CHECK_VALID("a->b");
+  CHECK_VALID("(a->b)");
+  CHECK_VALID("a->b->c");
+  CHECK_VALID("(a->b->c)");
+  CHECK_VALID("(a->b)->c");
+  CHECK_VALID("((a->b)->c)->d");
+  CHECK_VALID("((a->b)->(c->d)->e)->f");
+  CHECK_VALID("(a->b)->c->d->(e->f)->g");
+  CHECK_VALID("((a->(b->c)->d)->(e->f->g)->(h->i)->k)->l->m");
 }
 
 TEST_CASE("Negative tests") {
   unsigned error;
 
-  CHECK(!valid("a->b(->c)", error) && error == 4);
-  CHECK(!valid("(a->(b)->b)", error) && error == 6);
+  CHECK_ERROR("a->b(->c)", 4);
+  CHECK_ERROR("(a->(b)->b)", 6);
 
-  CHECK(!valid("", error) && error == 0);
-  CHECK(!valid(")", error) && error == 0);
-  CHECK(!valid("-", error) && error == 0);
-  CHECK(!valid("?", error) && error == 0);
+  CHECK_ERROR("", 0);
+  CHECK_ERROR(")", 0);
+  CHECK_ERROR("-", 0);
+  CHECK_ERROR("?", 0);
 
-  CHECK(!valid("(", error) && error == 1);
-  CHECK(!valid("a)", error) && error == 1);
-  CHECK(!valid("a-", error) && error == 1);
-  CHECK(!valid("a>", error) && error == 1);
+  CHECK_ERROR("(", 1);
+  CHECK_ERROR("a)", 1);
+  CHECK_ERROR("a>", 1);
 
-  CHECK(!valid("(a)", error) && error == 2);
-  CHECK(!valid("(a>", error) && error == 2);
+  CHECK_ERROR("a-", 2);
+  CHECK_ERROR("(a)", 2);
+  CHECK_ERROR("(a>", 2);
 
-  CHECK(!valid("a->)", error) && error == 3);
-  CHECK(!valid("a->->)", error) && error == 3);
-  CHECK(!valid("a->bc", error) && error == 4);
-  CHECK(!valid("(a->b", error) && error == 5);
-  CHECK(!valid("a->(b)->c", error) && error == 5);
-  CHECK(!valid("a->b->", error) && error == 6);
-  CHECK(!valid("a->b->cd", error) && error == 7);
-  CHECK(!valid("a->(b->)c", error) && error == 7);
-  CHECK(!valid("a->(b->c)", error) && error == 9);
+  CHECK_ERROR("a->)", 3);
+  CHECK_ERROR("a->->)", 3);
+  CHECK_ERROR("a->bc", 4);
+  CHECK_ERROR("(a->b", 5);
+  CHECK_ERROR("a->(b)->c", 5);
+  CHECK_ERROR("a->b->", 6);
+  CHECK_ERROR("a->b->cd", 7);
+  CHECK_ERROR("a->(b->)c", 7);
+  CHECK_ERROR("((a->b))", 7);
+  CHECK_ERROR("a->(b->c)", 9);
 
-  CHECK(!valid("(a->b)->c)", error) && error == 9);
-  CHECK(!valid("(a->(b->c))", error) && error == 10);
-  CHECK(!valid("a->(b->c->d)->e)", error) && error == 15);
-  CHECK(!valid("(a->b->c)->((d->e)->f)", error) && error == 22);
-
+  CHECK_ERROR("(a->b)->c)", 9);
+  CHECK_ERROR("(a->(b->c))", 10);
+  CHECK_ERROR("a->(b->c->d)->e)", 15);
+  CHECK_ERROR("(a->b->c)->((d->e)->f)", 22);
 }

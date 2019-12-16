@@ -1,52 +1,55 @@
+#define CHECK_VALID(s)      CHECK(valid(s,error));
+#define CHECK_ERROR(s,code) CHECK(!valid(s,error));CHECK_EQ(error,code);
+
 TEST_CASE("Positive tests") {
   unsigned error;
 
-  CHECK("f(g(x,y),h(k(u)),v)", error);
+  CHECK_VALID("f(g(x,y),h(k(u)),v)");
 
-  CHECK(valid("a", error));
-  CHECK(valid("a(b)", error));
-  CHECK(valid("a(b,c)", error));
-  CHECK(valid("a(b(c))", error));
-  CHECK(valid("a(b(c),d)", error));
-  CHECK(valid("a(b,c(d),e)", error));
-  CHECK(valid("a(b(c(d(e)),f),g,h)", error));
-  CHECK(valid("a(b(c(d(e(f(g(h(i),j),k),l),m),n),o),p)", error));
-  CHECK(valid("a(b,c(d,e(f,g(h,i(j,k(l,m,n,o))))))"), error);
-  CHECK(valid("a(b(c(d),e(f)),g(h(i),j(k)),l(m(n),o(p)))", error));
+  CHECK_VALID("a");
+  CHECK_VALID("a(b)");
+  CHECK_VALID("a(b,c)");
+  CHECK_VALID("a(b(c))");
+  CHECK_VALID("a(b(c),d)");
+  CHECK_VALID("a(b,c(d),e)");
+  CHECK_VALID("a(b(c(d(e)),f),g,h)");
+  CHECK_VALID("a(b(c(d(e(f(g(h(i),j),k),l),m),n),o),p)");
+  CHECK_VALID("a(b,c(d,e(f,g(h,i(j,k(l,m,n,o))))))");
+  CHECK_VALID("a(b(c(d),e(f)),g(h(i),j(k)),l(m(n),o(p)))");
 }
 
 TEST_CASE("Negative tests") {
   unsigned error;
 
-  CHECK(!valid("(f(x),g(x))", error) && error == 0);
-  CHECK(!valid("f(g(,x)", error) && error == 4);
+  CHECK_ERROR("(f(x),g(x))", 0);
+  CHECK_ERROR("f(g(,x)", 4);
 
-  CHECK(!valid("", error) && error == 0);
-  CHECK(!valid("(", error) && error == 0);
-  CHECK(!valid(")", error) && error == 0);
-  CHECK(!valid(",", error) && error == 0);
-  CHECK(!valid("?", error) && error == 0);
+  CHECK_ERROR("", 0);
+  CHECK_ERROR("(", 0);
+  CHECK_ERROR(")", 0);
+  CHECK_ERROR(",", 0);
+  CHECK_ERROR("?", 0);
 
-  CHECK(!valid("a)", error) && error == 1);
-  CHECK(!valid("ab", error) && error == 1);
-  CHECK(!valid("a,", error) && error == 1);
-  CHECK(!valid("a?", error) && error == 1);
+  CHECK_ERROR("a)", 1);
+  CHECK_ERROR("ab", 1);
+  CHECK_ERROR("a,", 1);
+  CHECK_ERROR("a?", 1);
 
-  CHECK(!valid("a()", error) && error == 2);
-  CHECK(!valid("a(,)", error) && error == 2);
+  CHECK_ERROR("a()", 2);
+  CHECK_ERROR("a(,)", 2);
 
-  CHECK(!valid("a(b,)", error) && error == 3);
-  CHECK(!valid("a(bc)", error) && error == 3);
-  CHECK(!valid("a(b),", error) && error == 4);
-  CHECK(!valid("a(b()", error) && error == 4);
-  CHECK(!valid("a(b,(d))", error) && error == 4);
-  CHECK(!valid("a(b(cd))", error) && error == 5);
-  CHECK(!valid("a(b(c)", error) && error == 6);
-  CHECK(!valid("a(b(c),)", error) && error == 7);
-  CHECK(!valid("a(b(c))(", error) && error == 7);
-  CHECK(!valid("a(b(c,d),)", error) && error == 8);
-  CHECK(!valid("a(b(c),d))", error) && error == 9);
-  CHECK(!valid("a(b(c),d(e(f))", error) && error == 14);
-  CHECK(!valid("a(b(c),d(e(f))),g(h)", error) && error == 15);
-  CHECK(!valid("a(b,c(d,e(f,g(h),i),k),l),m)", error) && error == 25);
+  CHECK_ERROR("a(bc)", 3);
+  CHECK_ERROR("a(b,)", 4);
+  CHECK_ERROR("a(b),", 4);
+  CHECK_ERROR("a(b()", 4);
+  CHECK_ERROR("a(b,(d))", 4);
+  CHECK_ERROR("a(b(cd))", 5);
+  CHECK_ERROR("a(b(c)", 6);
+  CHECK_ERROR("a(b(c),)", 7);
+  CHECK_ERROR("a(b(c))(", 7);
+  CHECK_ERROR("a(b(c,d),)", 9);
+  CHECK_ERROR("a(b(c),d))", 9);
+  CHECK_ERROR("a(b(c),d(e(f))", 14);
+  CHECK_ERROR("a(b(c),d(e(f))),g(h)", 15);
+  CHECK_ERROR("a(b,c(d,e(f,g(h),i),k),l),m)", 25);
 }
