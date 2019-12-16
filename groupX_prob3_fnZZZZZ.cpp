@@ -1,4 +1,5 @@
 #include <string>
+#include <stack>
 
 /***********************************************************************
   Задача 3. TBD
@@ -8,7 +9,58 @@
  РЕШЕНИЕ:
 ************************************************************************/
 
-bool valid(const std::string& s, unsigned& error);
+bool isLetter (char c) { return 'a' <= c && c <= 'z'; }
+bool isLetterQ(char c) { return isLetter(c) || c == '?'; }
+
+bool valid(const std::string& s, unsigned& error) {
+  unsigned& i = error;
+  std::stack<char> stack;
+  for(i = 0; i < s.size(); ++i)
+    if (s[i] == '(') {
+      if (!stack.empty() && stack.top() != '>' && stack.top() != '(')
+        return false;
+      stack.push(s[i]);
+    }
+    else if (isLetter(s[i])) {
+      if (!stack.empty() && stack.top() != '>' && stack.top() != '(')
+        return false;
+      stack.push(s[i]);
+    }
+    else if (s[i] == '-') {
+      if (stack.empty() || !isLetterQ(stack.top()))
+        return false;
+      stack.pop();
+      stack.push(s[i]);
+    }
+    else if (s[i] == '>') {
+      if (stack.empty() || stack.top() != '-')
+        return false;
+      stack.push(s[i]);
+    }
+    else if (s[i] == ')') {
+      if (stack.empty() || !isLetter(stack.top()))
+        return false;
+      stack.pop();
+      if (stack.empty() || stack.top() != '>')
+        return false;
+      while (!stack.empty() && stack.top() != '(')
+        stack.pop();
+      if (stack.empty())
+        return false;
+      stack.pop();
+      stack.push('?');
+    }
+    else return false;
+  char save;
+  if (stack.empty() || !isLetterQ(save = stack.top()))
+    return false;
+  stack.pop();
+  if (!stack.empty() && save == '?')
+    return false;
+  while (!stack.empty() && (stack.top() == '-' || stack.top() == '>'))
+    stack.pop();
+  return stack.empty();
+}
 
 /***********************************************************************
  КРАЙ НА РЕШЕНИЕТО
@@ -20,7 +72,7 @@ bool valid(const std::string& s, unsigned& error);
 /***********************************************************************
   РАЗКОМЕНТИРАЙТЕ СЛЕДВАЩИЯ РЕД, ЗА ДА ВКЛЮЧИТЕ ТЕСТОВЕТЕ
 ************************************************************************/
-//#include "prob3_tests.h"
+#include "prob3_tests.h"
 
 int main ()
 {
