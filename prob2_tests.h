@@ -5,7 +5,7 @@ void checkAndErase(std::vector<int> const& v, std::string s) {
 }
 
 TEST_CASE("buildTree tests") {
-  checkAndErase({}, "");
+  checkAndErase({}, ".");
   checkAndErase({1}, "(1..)");
   checkAndErase({1,2}, "(2(1..).)");
   checkAndErase({1,2,3}, "(2(1..)(3..))");
