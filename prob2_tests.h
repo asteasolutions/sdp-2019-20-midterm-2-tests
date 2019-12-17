@@ -1,3 +1,23 @@
+namespace doctest
+{
+  template <typename T>
+  struct StringMaker<std::vector<T>>
+  {
+    static String convert(const std::vector<T>& v) {
+      std::ostringstream oss;
+
+      oss << "{ ";
+      for (auto el : v)
+        {
+          oss << el << " ";
+        }
+      oss << "}";
+
+      return oss.str().c_str();
+    }
+  };
+}
+
 void checkAndErase(std::vector<int> const& v, std::string s) {
   Node<int>* t = buildTree(v);
   CHECK_EQ(printTree(t), s);
@@ -13,7 +33,7 @@ TEST_CASE("buildTree tests") {
   checkAndErase({1,2,3,4,5}, "(3(2(1..).)(5(4..).))");
   checkAndErase({1,2,3,4,5,6}, "(4(2(1..)(3..))(6(5..).))");
   checkAndErase({1,2,3,4,5,6,7}, "(4(2(1..)(3..))(6(5..)(7..)))");
-  checkAndErase({1,2,3,4,5,6,7,8}, "(5(4(2(1..).)(4..))(7(6(5..)..)(8..)))");
+  checkAndErase({1,2,3,4,5,6,7,8}, "(5(3(2(1..).)(4..))(7(6..)(8..)))");
 }
 
 TEST_CASE("sumMax tests") {
