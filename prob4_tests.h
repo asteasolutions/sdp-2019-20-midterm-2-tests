@@ -6,14 +6,14 @@ void checkAndErase(std::string const& v, std::string s) {
 
 TEST_CASE("buildTree tests") {
   checkAndErase("", ".");
-  checkAndErase("1", "(1..)");
-  checkAndErase("12", "(2(1..).)");
-  checkAndErase("123", "(2(1..)(3..))");
-  checkAndErase("1234", "(3(2(1..).)(4..))");
-  checkAndErase("12345", "(3(2(1..).)(5(4..).))");
-  checkAndErase("123456", "(4(2(1..)(3..))(6(5..).))");
-  checkAndErase("1234567", "(4(2(1..)(3..))(6(5..)(7..)))");
-  checkAndErase("12345678", "(5(4(2(1..).)(4..))(7(6(5..)..)(8..)))");
+  checkAndErase("1", "(49..)");
+  checkAndErase("12", "(50(49..).)");
+  checkAndErase("123", "(50(49..)(51..))");
+  checkAndErase("1234", "(51(50(49..).)(52..))");
+  checkAndErase("12345", "(51(50(49..).)(53(52..).))");
+  checkAndErase("123456", "(52(50(49..)(51..))(54(53..).))");
+  checkAndErase("1234567", "(52(50(49..)(51..))(54(53..)(55..)))");
+  checkAndErase("12345678", "(53(51(50(49..).)(52..))(55(54..)(56..)))");
 }
 
 TEST_CASE("countMax tests") {
@@ -34,6 +34,6 @@ TEST_CASE("countMax tests") {
   CHECK_EQ(countMax(t, 'a'), "aaa");
   t->right->right = new Node<char>('b');
   CHECK_EQ(countMax(t, 'a'), "aaa");
-  CHECK_EQ(countMax(t, 'v'), "abb");
+  CHECK_EQ(countMax(t, 'b'), "abb");
   eraseTree(t);
 }
