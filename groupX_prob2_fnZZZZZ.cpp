@@ -10,20 +10,20 @@
  РЕШЕНИЕ: а)
 ************************************************************************/
 
-Node<int>* buildTree (const std::vector<int>& v) {
+Node<unsigned>* buildTree (const std::vector<unsigned>& v) {
   if (v.empty())
     return nullptr;
 
   unsigned mid = v.size() / 2;
-  std::vector<int>  L(v.begin(), v.begin() + mid), R(v.begin() + mid + 1, v.end());
-  return new Node<int>(v[mid], buildTree(L), buildTree(R));
+  std::vector<unsigned>  L(v.begin(), v.begin() + mid), R(v.begin() + mid + 1, v.end());
+  return new Node<unsigned>(v[mid], buildTree(L), buildTree(R));
 }
 
 /***********************************************************************
  РЕШЕНИЕ: б)
 ************************************************************************/
 
-void findMaxSum(Node<int>* t, int sum, std::vector<int>& v, int& max, std::vector<int>& maxPath) {
+void findMaxSum(Node<unsigned>* t, unsigned sum, std::vector<unsigned>& v, unsigned& max, std::vector<unsigned>& maxPath) {
   if (t == nullptr) {
     if (sum > max) {
       max = sum;
@@ -37,9 +37,9 @@ void findMaxSum(Node<int>* t, int sum, std::vector<int>& v, int& max, std::vecto
   }
 }
 
-std::vector<int> sumMax(Node<int>* t) {
-  std::vector<int> empty, result;
-  int max = 0;
+std::vector<unsigned> sumMax(Node<unsigned>* t) {
+  std::vector<unsigned> empty, result;
+  unsigned max = 0;
   findMaxSum(t, 0, empty, max, result);
   return result;
 }
