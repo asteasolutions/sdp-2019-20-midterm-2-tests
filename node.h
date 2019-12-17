@@ -2,10 +2,11 @@
 #define __NODE_H
 
 #include <string>
+#include <sstream>
 
 template <typename T>
 struct Node {
-  char data;
+  T data;
   Node *left, *right;
 
   Node(T const& _data = T(), Node* _left = nullptr, Node* _right = nullptr)
@@ -14,17 +15,17 @@ struct Node {
 
 template <typename T>
 std::string printTree(Node<T>* t) {
-  std::string s;
+  std::stringstream s;
   if (t != nullptr) {
-    s += '(';
-    s += std::to_string(t->data);
-    s += printTree(t->left);
-    s += printTree(t->right);
-    s += ')';
+    s << '(';
+    s << t->data;
+    s << printTree(t->left);
+    s << printTree(t->right);
+    s << ')';
   }
   else
-    s += '.';
-  return s;
+    s << '.';
+  return s.str();
 }
 
 template <typename T>
